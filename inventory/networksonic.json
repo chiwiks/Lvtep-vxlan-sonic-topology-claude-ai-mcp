@@ -1,0 +1,11 @@
+
+
+
+{
+  "Spine1": { "host": "192.168.108.5", "device_type": "dell_sonic" },
+  "Spine2": { "host": "192.168.108.6", "device_type": "dell_sonic"},
+  "Leaf1": { "host": "192.168.108.3", "device_type": "dell_sonic" },
+  "Leaf2": { "host": "192.168.108.4", "device_type": "dell_sonic"},
+  "Leaf3": { "host": "192.168.108.7", "device_type": "dell_sonic"},
+  "routerswitch": {"host": "192.168.108.2", "device_type": "dell_sonic"}
+}
