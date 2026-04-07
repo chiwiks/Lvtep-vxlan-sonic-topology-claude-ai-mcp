@@ -1,4 +1,4 @@
-# Networking Automation using Claude AI, MCP Server, and vxlan clos topology with SONiC
+# Networking Automation using Claude AI, MCP Server, and VXlAN CLOS topology with SONiC
 
 Automate network management for spine-and-leaf topologies running SONiC with lvtep VXLAN EVPN configuration. This project leverages Claude AI and the Model Context Protocol (MCP) to provide intelligent, conversational network automation through GNS3.
 
@@ -65,7 +65,7 @@ The topology consists of:
 - **2 Broadcom three SONiC Leaf Routers. Leaf1 and Leaf2 are configured as LVTEP with separate**
 - ** routerswitch acts a switch for portchannel between leaf1 and leaf2 for mclag configuration** 
 
-![Network Topology](topology.png)
+![Network Topology](lvtep_toplogy.png)
 
 ### 3️⃣ SONiC Configuration
 
@@ -115,43 +115,39 @@ async def push_config(device: str, commands: list) -> str:
 
 ### 5️⃣ Connect the MCPServer
 
-#### Example Query 1: check the overall toplogy using claude for summary of the topology
+#### Query 1: check the overall toplogy using claude for summary of the topology
 
 Send this command to Claude:
 ```
-Check if you can connect to Spine Router?
+Check the status of lvtep tunnel
 ```
 
+![Spine Query Result](https://github.com/user-attachments/assets/e2b8546f-1ae1-4b14-bf26-2db3adbc47c2)
 
+Claude logs in using the mcpserver script and network json file to give the summary of the topology
 
-![Spine Query Result](https://github.com/user-attachments/assets/b61c6b48-ca5e-4cdd-b95e-e14947e7db77)
-
-#### Example Query 2: Check VXLAN Tunnel Status
+#### Query 2: Troubleshooting: removed the interface of routerswitch to leaf1 from portchannel which brought down the  line protocol. Asked Claude to fix it
 
 Send this command to Claude:
 ```
-Can you check the VXLAN tunnel between Leaf1 and Leaf2 and the VRF configurations?
+Can you check the portchannel 1 between leaf1 and routerswitch
 ```
 
-Claude will:
-- Connect to your topology via the MCP server
-- Execute `show vxlan tunnel` and related commands
-- Return detailed results
+While troubleshooting.....you will notice that claude starts hallucinating and uses the wrong configuration. 
 
-![VXLAN Query Result](https://github.com/user-attachments/assets/c90daa6c-4b0e-457a-b59a-93b7bfa15b0e)
 
-#### Example Query 3: Update Device Configuration
+![VXLAN Query Result](https://github.com/user-attachments/assets/35d62a3b-ab7f-4bd4-b952-ca9352bdc725)
 
-Send this command to Claude:
-```
-Add description "future use" to interface Ethernet40 on Leaf2
-```
 
-Claude will:
-- Use the `push_config()` function
-- Connect to Leaf2
-- Apply the configuration change
-- Confirm completion
+I suggested using the right configuration.....
 
-![Configuration Update Result](https://github.com/user-attachments/assets/14cabc7f-bf29-4ab7-90aa-1a7991ebc2b9)
+![](https://github.com/user-attachments/assets/07ab2d0b-2b35-401b-b17e-db3940d3be5a)
 
+
+Claude stopped hallucinating and used my suggested configuration to fix the problem
+
+![](https://github.com/user-attachments/assets/48ee9b98-fc34-4d9a-b0f7-58c16606b80e)
+
+![](https://github.com/user-attachments/assets/03c94989-7274-4145-8ab8-38c0b21547af)
+
+To stop hullucination, Intent based mcpserver with intent.json file  will be added to help claude understand how the topology should be and help with faster troubleshooting
